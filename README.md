@@ -186,9 +186,7 @@ rag-chatbot/
 4. Test thoroughly
 5. Submit pull request
 
-##  License
 
-MIT License - feel free to modify and distribute!
 
 ## Support
 
