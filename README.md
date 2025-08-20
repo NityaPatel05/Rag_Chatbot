@@ -1,4 +1,7 @@
-Advanced RAG System
+Advanced RAG System:
+
+
+
 An enterprise-grade document Q&A system built with LangChain, Ollama, and Streamlit featuring advanced retrieval techniques including merger retrieval, contextual compression, parent document retrieval, and HyDE.
 Key Features
 Advanced Retrieval Techniques
