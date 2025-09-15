@@ -1,7 +1,3 @@
-"""
-Retrieval engine module for the Advanced RAG System.
-Manages multiple retrieval strategies and document ranking.
-"""
 
 from typing import List, Dict, Any
 import numpy as np
@@ -19,10 +15,8 @@ from utils import filter_complex_metadata
 from config import Config
 
 class RetrievalEngine:
-    """Manages advanced retrieval strategies and document ranking."""
     
     def __init__(self, model_manager, document_processor):
-        """Initialize retrieval engine."""
         self.model_manager = model_manager
         self.document_processor = document_processor
         self.retrievers = {}
@@ -32,7 +26,6 @@ class RetrievalEngine:
         self.long_context_reorder = LongContextReorder()
     
     def create_retrievers(self, documents: List[Document]):
-        """Create multiple advanced retrievers."""
         small_chunks, medium_chunks, large_chunks = self.document_processor.create_chunks(documents)
         
         self._create_vector_stores(small_chunks, medium_chunks)
@@ -42,7 +35,6 @@ class RetrievalEngine:
         self._create_ensemble_retrievers()
     
     def _create_vector_stores(self, small_chunks: List[Document], medium_chunks: List[Document]):
-        """Create vector stores for different chunk sizes."""
         self.vectorstore = Chroma.from_documents(
             documents=filter_complex_metadata(small_chunks),
             embedding=self.model_manager.get_embeddings(),
@@ -57,7 +49,6 @@ class RetrievalEngine:
         )
     
     def _create_individual_retrievers(self, small_chunks: List[Document], medium_chunks: List[Document], documents: List[Document]):
-        """Create individual retriever instances."""
         self.retrievers['vector'] = self.vectorstore.as_retriever(
             search_kwargs={"k": Config.RETRIEVER_K}
         )
@@ -88,7 +79,6 @@ class RetrievalEngine:
         self.retrievers['parent'].add_documents(documents)
     
     def _create_ensemble_retrievers(self):
-        """Create ensemble retrievers that combine multiple strategies."""
         base_retrievers = [
             self.retrievers['vector'],
             self.retrievers['bm25'],
@@ -98,14 +88,12 @@ class RetrievalEngine:
         self.retrievers['merger'] = MergerRetriever(retrievers=base_retrievers)
     
     def retrieve_documents(self, query: str, strategy: str) -> List[Document]:
-        """Retrieve documents using specified strategy."""
         if strategy in self.retrievers:
             return self.retrievers[strategy].invoke(query)
         else:
             return self.retrievers['merger'].invoke(query)
     
     def cross_encoder_rerank(self, query: str, documents: List[Document], top_k: int = None) -> List[Document]:
-        """Rerank documents using cross-encoder."""
         if top_k is None:
             top_k = Config.RERANK_TOP_K
             
@@ -125,16 +113,13 @@ class RetrievalEngine:
             return documents[:top_k]
     
     def apply_long_context_reorder(self, documents: List[Document]) -> List[Document]:
-        """Apply Long Context Reorder to handle lost in middle phenomenon."""
         try:
             return self.long_context_reorder.transform_documents(documents)
         except:
             return documents
     
     def get_available_strategies(self) -> List[str]:
-        """Get list of available retrieval strategies."""
         return list(self.retrievers.keys())
     
     def is_ready(self) -> bool:
-        """Check if retrieval engine is ready with retrievers."""
         return bool(self.retrievers)

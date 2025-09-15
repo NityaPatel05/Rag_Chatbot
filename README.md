@@ -1,6 +1,6 @@
 # Advanced RAG System
 
-An enterprise-grade document Q&A system built with **LangChain**, **Ollama**, and **Streamlit** featuring advanced retrieval techniques including merger retrieval, contextual compression, parent document retrieval, and HyDE.
+An robust document Q&A system built with **LangChain**, **Ollama**, and **Streamlit** featuring advanced retrieval techniques including merger retrieval, contextual compression, parent document retrieval, and HyDE.
 
 ## Key Features
 
@@ -26,9 +26,9 @@ An enterprise-grade document Q&A system built with **LangChain**, **Ollama**, an
 - **Intelligent Chunking**: Recursive text splitting with overlap
 - **Metadata Preservation**: Source tracking and page numbers
 
-### Professional Interface
+### User-Friendly Interface
 
-- **Streamlit Web UI**: Clean, enterprise-grade interface
+- **Streamlit Web UI**: Clean interface
 - **Strategy Selection**: Manual or automatic retrieval strategy selection
 - **Real-time Processing**: Live document processing and query handling
 - **Source Attribution**: Proper citation tracking with expandable source views
@@ -56,23 +56,25 @@ source venv\Scripts\activate
 
 pip install -r requirements.txt
 
-````
-
 ### 3. Configure Environment
 
 Create a `.env` file in the project root:
 
-```env
+env
+
 # Ollama Configuration
+
 OLLAMA_BASE_URL=http://localhost:11434
 OLLAMA_MODEL=gemma3:1b
 OLLAMA_EMBEDDING_MODEL=mxbai-embed-large:latest
 
 # Document Processing
+
 CHUNK_SIZE=500
 CHUNK_OVERLAP=50
 
 # Retrieval Configuration
+
 RETRIEVER_K=8
 COMPRESSION_RETRIEVER_K=10
 HYDE_RETRIEVER_K=8
@@ -81,9 +83,9 @@ RERANK_TOP_K=5
 FINAL_DOCS_COUNT=6
 
 # Model Configuration
+
 LLM_TEMPERATURE=0.1
 CROSS_ENCODER_MODEL=cross-encoder/ms-marco-MiniLM-L-6-v2
-````
 
 ### 4. Pull Required Models
 
@@ -92,17 +94,15 @@ CROSS_ENCODER_MODEL=cross-encoder/ms-marco-MiniLM-L-6-v2
 ollama pull gemma3:1b # Main language model
 ollama pull mxbai-embed-large:latest # Embedding model
 
-```
-
 ### 5. Verify Setup
 
-
 # Check Ollama is running
+
 http://localhost:11434
 
 # Verify models are installed
+
 ollama list
-```
 
 ### 5. Run the Application
 
@@ -114,169 +114,154 @@ source venv\Scripts\activate
 
 streamlit run app.py
 
-```
+## How to Use
 
-Open your browser and navigate to `http://localhost:8501`
+### 1 Upload Documents
 
-## 📋 How to Use
-
-### 1. Upload Documents
-
-- Use the sidebar to upload PDF, TXT, or CSV files
-- Click "Process Documents" to index them
+- Use the sidebar to upload **PDF, TXT, or CSV** files
+- Click **Process Documents** to index them
 - Wait for confirmation message
 
-### 2. Ask Questions
+### 2 Ask Questions
 
 - Type questions in the chat interface
-- Get answers with inline citations [1], [2]
-- View source documents at the bottom
+- Get answers with **inline citations** \[1], \[2]
+- View **source documents** at the bottom
 
-### 3. Example Queries
+### 3 Example Queries
 
-- **Factual**: "What is the main topic of document 1?"
-- **How-to**: "How to implement the solution mentioned?"
-- **Comparison**: "Compare the approaches in different documents"
-- **Analysis**: "Summarize the key findings"
+- **Factual** → _"What is the main topic of document 1?"_
+- **How-to** → _"How to implement the solution mentioned?"_
+- **Comparison** → _"Compare the approaches in different documents"_
+- **Analysis** → _"Summarize the key findings"_
+
+---
 
 ## Architecture
 
 ### Advanced Retrieval Pipeline
 
+```mermaid
+flowchart TD
+    A[Query Input] --> B[Query Enhancement & Strategy Selection]
+    B --> C[Multi-Strategy Retrieval]
+    C -->|Vector + BM25 + HyDE| D[Merger Retriever]
+    C --> E[Contextual Compression]
+    C --> F[Parent Document Retrieval]
+    C --> G[Self-Query Filtering]
+    D & E & F & G --> H[Cross-Encoder Reranking]
+    H --> I[Long Context Reorder]
+    I --> J[Context Formation & LLM Generation]
 ```
-
-Query Input
-↓
-Query Enhancement & Strategy Selection
-↓
-Multi-Strategy Retrieval:
-├── Merger Retriever (Vector + BM25 + HyDE)
-├── Contextual Compression
-├── Parent Document Retrieval
-└── Self-Query Filtering
-↓
-Cross-Encoder Reranking
-↓
-Long Context Reorder
-↓
-Context Formation & LLM Generation
-
-````
 
 ### Retrieval Strategies
 
-- **Factual Queries**: Contextual Compression for precise answers
-- **Procedural Questions**: Parent Document Retrieval for comprehensive context
-- **Comparison Tasks**: Merger Retriever for diverse perspectives
-- **Analytical Queries**: HyDE for conceptual matching
-- **General Questions**: Auto-selection of optimal strategy
+- **Factual Queries** → Contextual Compression (precise answers)
+- **Procedural Questions** → Parent Document Retrieval (comprehensive context)
+- **Comparison Tasks** → Merger Retriever (diverse perspectives)
+- **Analytical Queries** → HyDE (conceptual matching)
+- **General Questions** → Auto-selection of best strategy
 
-### Components
+---
 
-- **LangChain**: Document processing and chain orchestration
-- **Ollama**: Local LLM inference (gemma3:1b ) with connection validation
-- **ChromaDB**: Dual vector databases for different chunk sizes
-- **BM25**: Keyword-based retrieval
-- **Cross-Encoder**: Neural reranking model
-- **Streamlit**: Professional web interface
-- **Modular Architecture**: Separated concerns for better maintainability
+## Components
 
-## ⚙ Configuration Options
+- **LangChain** → Document processing & chain orchestration
+- **Ollama** → Local LLM inference (`gemma3:1b`) with connection validation
+- **ChromaDB** → Dual vector databases for different chunk sizes
+- **BM25** → Keyword-based retrieval
+- **Cross-Encoder** → Neural reranking model
+- **Streamlit** → Professional web interface
+- **Modular Architecture** → Easy to extend & maintain
+
+---
+
+## Configuration Options
 
 ### Model Settings
 
-- `OLLAMA_MODEL`: Main language model (default: gemma3:1b )
-- `OLLAMA_EMBEDDING_MODEL`: Embedding model (default: mxbai-embed-large:latest )
+- `OLLAMA_MODEL`: Main language model _(default: gemma3:1b)_
+- `OLLAMA_EMBEDDING_MODEL`: Embedding model _(default: mxbai-embed-large\:latest)_
 - `OLLAMA_BASE_URL`: Ollama server URL
 
-### Configuration Settings
+### Retrieval Settings
 
-- `CHUNK_SIZE`: Document chunk size (default: 500)
-- `CHUNK_OVERLAP`: Chunk overlap (default: 50)
-- `RETRIEVER_K`: Number of documents to retrieve (default: 8)
+- `CHUNK_SIZE`: Document chunk size _(default: 500)_
+- `CHUNK_OVERLAP`: Overlap between chunks _(default: 50)_
+- `RETRIEVER_K`: Number of documents to retrieve _(default: 8)_
 
-    ## Troubleshooting
+---
 
-    **Missing Dependencies**
+## Troubleshooting
 
-   # Activate virtual environment on Windows
+### Missing Dependencies
+
+```bash
 venv\Scripts\activate
 
-# Upgrade and install dependencies
 pip install --upgrade -r requirements.txt
+```
 
-    **Import Errors**
+### Memory Issues
 
-   # Navigate to project folder
-cd path\to\rag-chatbot
+- Reduce `CHUNK_SIZE` in `.env`
+- Use smaller models:
 
-# Check Python paths
-python -c "import sys; print(sys.path)"
+  ```bash
+  ollama pull gemma3:1b
+  ```
 
-    ```
-
-    **Memory Issues**
-
-    - Reduce `CHUNK_SIZE` in .env
-    - Use smaller models: `ollama pull gemma3:1b `
-
-    ### Performance Tips
-
-    - Use SSD storage for ChromaDB
-    - Increase `RETRIEVER_K` for better recall
-    - Adjust chunk size based on document type
+---
 
 ## Project Structure
 
-````
-
+```bash
 rag-chatbot/
-├── app.py # Main Streamlit application
-├── chatbot.py # Core RAG chatbot class
-├── config.py # Configuration and environment variables
-├── models.py # LLM and embedding model management
-├── document_processor.py # Document loading and chunking
-├── retrieval_engine.py # Advanced retrieval strategies
-├── retrievers.py # Custom retrievers (HyDE)
-├── utils.py # Utility functions
-├── requirements.txt # Python dependencies
-├── .env # Environment variables
-├── .gitignore # Git ignore patterns
-├── README.md # This file
-├── **pycache**/ # Python cache files (auto-generated)
-├── chroma_db_small/ # Small chunks vector database
-├── chroma_db_parent/ # Parent documents vector database
-└── venv/ # Virtual environment (if using venv)
-
+├── app.py
+├── chatbot.py
+├── config.py
+├── models.py
+├── document_processor.py
+├── retrieval_engine.py
+├── retrievers.py
+├── utils.py
+├── requirements.txt
+├── .gitignore
+├── README.md
+├── chroma_db_small/
+├── chroma_db_parent/
 ```
 
-### Module Description
+---
 
-- **`app.py`**: Streamlit web interface and user interaction
-- **`chatbot.py`**: Main orchestrator that coordinates all components
-- **`config.py`**: Centralized configuration management with environment variables
-- **`models.py`**: Manages LLM, embeddings, and cross-encoder models with connection validation
-- **`document_processor.py`**: Handles document loading, text splitting, and metadata management
-- **`retrieval_engine.py`**: Implements advanced retrieval strategies and document ranking
-- **`retrievers.py`**: Custom retriever implementations (HyDE, etc.)
-- **`utils.py`**: Helper functions for query processing and document formatting
+## Module Description
+
+- **`app.py`** → Streamlit UI
+- **`chatbot.py`** → Main orchestrator
+- **`config.py`** → Centralized config
+- **`models.py`** → LLMs, embeddings, and rerankers
+- **`document_processor.py`** → Document loaders & chunking
+- **`retrieval_engine.py`** → Retrieval + ranking logic
+- **`retrievers.py`** → Custom retrievers (HyDE, etc.)
+- **`utils.py`** → Query/document utilities
+
+---
 
 ## Contributing
 
-1. Fork the repository
-2. Create feature branch
-3. Make changes
+1. Fork the repo
+2. Create a feature branch
+3. Make your changes
 4. Test thoroughly
-5. Submit pull request
+5. Submit a pull request
+
+---
 
 ## Support
 
-For issues and questions:
+For help:
 
-1. Check the troubleshooting section
-2. Review Ollama documentation
-3. Check LangChain documentation
-4. Create an issue in the repository
-
----
-```
+1. Check the **Troubleshooting** section
+2. Review **Ollama documentation**
+3. Review **LangChain documentation**
+4. Open an **issue** in this repository

@@ -1,7 +1,4 @@
-"""
-Streamlit UI for Advanced RAG System.
-Main application interface for the document Q&A system.
-"""
+
 
 import streamlit as st
 from typing import Optional
@@ -10,7 +7,6 @@ from chatbot import AdvancedRAGChatbot
 from config import Config
 
 def get_strategy_options():
-    """Get available strategy options for the UI."""
     return {
         "Auto": None,
         "Merger Retriever": "merger",
@@ -67,7 +63,6 @@ def main():
         st.text(f"Chunk Size: {Config.CHUNK_SIZE}")
 
 def main():
-    """Main Streamlit application function."""
     st.set_page_config(
         page_title="Advanced RAG System",
         page_icon="📚",
@@ -82,7 +77,7 @@ def main():
             st.session_state.chatbot = AdvancedRAGChatbot()
     
     if not st.session_state.chatbot.model_manager.is_ready():
-        st.error("⚠️ Ollama Connection Issue")
+        st.error(" Ollama Connection Issue")
         st.markdown("""
         **Please ensure:**
         1. Ollama is installed and running

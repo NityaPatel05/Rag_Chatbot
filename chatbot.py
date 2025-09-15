@@ -1,7 +1,3 @@
-"""
-Main chatbot class for the Advanced RAG System.
-Orchestrates the entire RAG pipeline.
-"""
 
 import streamlit as st
 from typing import List, Dict, Any, Optional
@@ -15,10 +11,8 @@ from utils import rewrite_query, get_retrieval_strategy, format_sources
 from config import Config
 
 class AdvancedRAGChatbot:
-    """Advanced RAG Chatbot with multiple retrieval strategies."""
     
     def __init__(self):
-        """Initialize the advanced RAG chatbot with enhanced retrievers."""
         self.model_manager = ModelManager()
         self.document_processor = DocumentProcessor()
         self.retrieval_engine = RetrievalEngine(self.model_manager, self.document_processor)
@@ -26,7 +20,6 @@ class AdvancedRAGChatbot:
         self.parent_documents = []
     
     def process_documents(self, uploaded_files) -> int:
-        """Process uploaded documents and create advanced retrievers."""
         if not self.model_manager.is_ready():
             st.error("Models are not ready. Please check Ollama connection and try again.")
             return 0
@@ -42,7 +35,6 @@ class AdvancedRAGChatbot:
         return 0
     
     def generate_answer(self, query: str, strategy: Optional[str] = None) -> Dict[str, Any]:
-        """Generate answer using advanced RAG pipeline."""
         if not self.model_manager.is_ready():
             return {
                 "answer": "Models are not ready. Please check Ollama connection and required models.",
@@ -99,7 +91,6 @@ class AdvancedRAGChatbot:
             }
     
     def _generate_llm_response(self, query: str, documents: List[Document]) -> str:
-        """Generate LLM response based on query and retrieved documents."""
         context = "\n\n".join([
             f"Document {i+1}:\n{doc.page_content}" 
             for i, doc in enumerate(documents)
@@ -133,11 +124,9 @@ Answer:"""
         return answer
     
     def get_available_strategies(self) -> List[str]:
-        """Get list of available retrieval strategies."""
         if self.retrieval_engine.is_ready():
             return self.retrieval_engine.get_available_strategies()
         return []
     
     def is_ready(self) -> bool:
-        """Check if chatbot is ready to answer questions."""
         return self.retrieval_engine.is_ready()

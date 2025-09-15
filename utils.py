@@ -6,7 +6,6 @@ from typing import List
 from langchain_core.documents import Document
 
 def filter_complex_metadata(documents: List[Document]) -> List[Document]:
-    """Remove or simplify complex metadata from documents."""
     simple_docs = []
     for doc in documents:
         simple_metadata = {
@@ -18,7 +17,6 @@ def filter_complex_metadata(documents: List[Document]) -> List[Document]:
     return simple_docs
 
 def format_sources(documents: List[Document]) -> str:
-    """Format source citations professionally."""
     sources = []
     seen_sources = set()
     
@@ -34,7 +32,6 @@ def format_sources(documents: List[Document]) -> str:
     return "\n".join(sources)
 
 def rewrite_query(query: str) -> str:
-    """Advanced query rewriting with context understanding."""
     query = query.strip()
     
     query_lower = query.lower()
@@ -51,7 +48,6 @@ def rewrite_query(query: str) -> str:
     return query
 
 def get_retrieval_strategy(query: str) -> str:
-    """Determine best retrieval strategy based on query characteristics."""
     query_lower = query.lower()
     
     if any(word in query_lower for word in ['what is', 'define', 'meaning']):

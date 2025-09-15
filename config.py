@@ -1,7 +1,4 @@
-"""
-Configuration module for Advanced RAG System.
-Contains all environment variables and configuration settings.
-"""
+
 
 import os
 from dotenv import load_dotenv
@@ -9,7 +6,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    """Configuration class for the RAG system."""
     
     OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "gemma3:1b")
     OLLAMA_EMBEDDING_MODEL = os.getenv("OLLAMA_EMBEDDING_MODEL", "mxbai-embed-large:latest")
